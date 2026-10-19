@@ -66,7 +66,14 @@ class LineageVersionDetailPreference :
     }
 
     override fun getSummary(context: Context): CharSequence =
-        SystemProperties.get(LINEAGE_VERSION_PROPERTY, context.getString(R.string.unknown));
+        SystemProperties.get(
+            if (SystemProperties.get("ro.crdroid.display.version", "").contains("-UNOFFICIAL-")) {
+                "ro.crdroid.display.version"
+            } else {
+                LINEAGE_VERSION_PROPERTY
+            },
+            context.getString(R.string.unknown),
+        )
 
     // return true swallows the click event, while return false will start the intent
     override fun onPreferenceClick(preference: Preference): Boolean {

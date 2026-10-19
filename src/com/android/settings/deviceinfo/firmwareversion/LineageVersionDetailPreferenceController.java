@@ -77,8 +77,9 @@ public class LineageVersionDetailPreferenceController extends BasePreferenceCont
 
     @Override
     public CharSequence getSummary() {
-        return SystemProperties.get(KEY_LINEAGE_VERSION_PROP,
-                mContext.getString(R.string.unknown));
+        final String property = SystemProperties.get("ro.crdroid.display.version", "").contains("-UNOFFICIAL-")
+                ? "ro.crdroid.display.version" : KEY_LINEAGE_VERSION_PROP;
+        return SystemProperties.get(property, mContext.getString(R.string.unknown));
     }
 
     @Override

@@ -57,6 +57,13 @@ class BuildMaintainerPreference :
         preference.onPreferenceClickListener = this
 
         val context = preference.context
+        if (SystemProperties.get("ro.crdroid.display.version", "").contains("-UNOFFICIAL-")) {
+            resolvedMaintainer = SystemProperties.get("ro.crdroid.display.version", "").substringAfter("-UNOFFICIAL-", "Unofficial")
+            resolvedDonateUrl = null
+            fetchStarted = true
+            applyState(preference)
+            return
+        }
         val overlayMaintainer = safeGetString(context, R.string.build_maintainer_summary).trim()
         val overlayDonateUrl = safeGetString(context, R.string.build_maintainer_donate_url)
 
@@ -76,6 +83,9 @@ class BuildMaintainerPreference :
     }
 
     override fun getSummary(context: Context): CharSequence? {
+        if (SystemProperties.get("ro.crdroid.display.version", "").contains("-UNOFFICIAL-")) {
+            return SystemProperties.get("ro.crdroid.display.version", "").substringAfter("-UNOFFICIAL-", "Unofficial")
+        }
         val maintainer = resolvedMaintainer
         if (maintainer.isNotEmpty()) return maintainer
         return safeGetString(context, R.string.build_maintainer_summary).trim()
